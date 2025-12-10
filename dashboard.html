@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Books - Digital Library</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <i class="fas fa-book"></i> Digital Library
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="dashboard.html">My Books</a>
+                <a href="admin.html" id="adminLink" style="display: none;">Admin</a>
+                <span id="userGreeting" style="display: none;"></span>
+                <a href="login.html" id="loginBtn" class="btn btn-primary">Login</a>
+                <a href="#" id="logoutBtn" class="btn btn-danger" style="display: none;">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="main-content">
+            <h1>My Borrowed Books</h1>
+            <p class="subtitle">Manage your borrowed books and return dates</p>
+            
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <i class="fas fa-book-open fa-2x"></i>
+                    <div class="stat-number" id="totalBooks">0</div>
+                    <div class="stat-label">Total Books</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-clock fa-2x"></i>
+                    <div class="stat-number" id="borrowedCount">0</div>
+                    <div class="stat-label">Currently Borrowed</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-check-circle fa-2x"></i>
+                    <div class="stat-number" id="returnedCount">0</div>
+                    <div class="stat-label">Returned</div>
+                </div>
+            </div>
+            
+            <h2>My Borrowed Books</h2>
+            <div id="borrowedBooksContainer" class="books-grid">
+                <!-- Borrowed books will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+    // Dashboard specific functions
+    async function loadDashboardStats() {
+        try {
+            const myBooks = await apiRequest('/my-books');
+            
+            const total = myBooks.length;
+            const borrowed = myBooks.filter(b => !b.return_date).length;
+            const returned = myBooks.filter(b => b.return_date).length;
+            
+            document.getElementById('totalBooks').textContent = total;
+            document.getElementById('borrowedCount').textContent = borrowed;
+            document.getElementById('returnedCount').textContent = returned;
+        } catch (error) {
+            console.error('Error loading stats:', error);
+        }
+    }
+    
+    // Initialize dashboard
+    document.addEventListener('DOMContentLoaded', async () => {
+        await initPage();
+        if (currentUser) {
+            await loadDashboardStats();
+        }
+    });
+    </script>
+</body>
+</html>

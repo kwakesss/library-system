@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Digital Library</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <i class="fas fa-book"></i> Digital Library
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="dashboard.html">My Books</a>
+                <a href="admin.html" id="adminLink" style="display: none;">Admin</a>
+                <span id="userGreeting" style="display: none;"></span>
+                <a href="login.html" id="loginBtn" class="btn btn-primary">Login</a>
+                <a href="#" id="logoutBtn" class="btn btn-danger" style="display: none;">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="main-content">
+            <h1>Admin Panel</h1>
+            <p class="subtitle">Manage books and view borrow records</p>
+            
+            <div id="adminContent">
+                <!-- Admin content will be loaded here -->
+                <div class="loading">Checking permissions...</div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+    // Admin specific functions
+    async function loadAdminPanel() {
+        const adminContent = document.getElementById('adminContent');
+        
+        if (!currentUser || currentUser.role !== 'admin') {
+            adminContent.innerHTML = `
+                <div class="alert alert-error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    Admin access required. Please login as administrator.
+                </div>
+                <a href="login.html" class="btn btn-primary">Login</a>
+            `;
+            return;
+        }
+        
+        adminContent.innerHTML = `
+            <div class="tabs">
+                <button class="btn btn-primary" onclick="showTab('books')">
+                    <i class="fas fa-book"></i> Manage Books
+                </button>
+                <button class="btn btn-secondary" onclick="showTab('addBook')">
+                    <i class="fas fa-plus"></i> Add New Book
+                </button>
+                <button class="btn btn-secondary" onclick="showTab('borrowRecords')">
+                    <i class="fas fa-history"></i> Borrow Records
+                </button>
+            </div>
+            
+            <div id="booksTab" class="tab-content" style="display: block;">
+                <h2>Manage Books</h2>
+                <div id="booksList" class="books-grid"></div>
+            </div>
+            
+            <div id="addBookTab" class="tab-content" style="display: none;">
+                <h2>Add New Book</h2>
+                <form id="addBookForm">
+                    <div class="form-group">
+                        <label for="bookTitle">Title</label>
+                        <input type="text" id="bookTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bookAuthor">Author</label>
+                        <select id="bookAuthor" required>
+                            <option value="">Select Author</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="bookISBN">ISBN</label>
+                        <input type="text" id="bookISBN" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bookYear">Published Year</label>
+                        <input type="number" id="bookYear" min="1900" max="2024" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bookCopies">Copies Available</label>
+                        <input type="number" id="bookCopies" min="1" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Book</button>
+                </form>
+            </div>
+            
+            <div id="borrowRecordsTab" class="tab-content" style="display: none;">
+                <h2>Borrow Records</h2>
+                <div id="recordsList"></div>
+            </div>
+        `;
+        
+        await loadAdminBooks();
+        await loadAuthorsForAdmin();
+        setupAddBookForm();
+    }
+    
+    function showTab(tabName) {
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.style.display = 'none';
+        });
+        document.getElementById(tabName + 'Tab').style.display = 'block';
+        
+        if (tabName === 'borrowRecords') {
+            loadBorrowRecords();
+        }
+    }
+    
+    async function loadAdminBooks() {
+        try {
+            const books = await apiRequest('/books');
+            const booksList = document.getElementById('booksList');
+            
+            if (books.length === 0) {
+                booksList.innerHTML = '<div class="loading">No books found</div>';
+                return;
+            }
+            
+            booksList.innerHTML = books.map(book => `
+                <div class="book-card">
+                    <div class="book-card-header">
+                        <h3 class="book-title">${book.title}</h3>
+                    </div>
+                    <div class="book-card-body">
+                        <p><strong>Author:</strong> ${book.author_name}</p>
+                        <p><strong>ISBN:</strong> ${book.isbn}</p>
+                        <p><strong>Year:</strong> ${book.published_year}</p>
+                        <p><strong>Available:</strong> ${book.copies_available} copies</p>
+                        <div style="margin-top: 15px; display: flex; gap: 10px;">
+                            <button onclick="deleteBook(${book.book_id})" class="btn btn-danger" style="flex: 1;">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Error loading books:', error);
+        }
+    }
+    
+    async function loadAuthorsForAdmin() {
+        try {
+            const authors = await apiRequest('/authors');
+            const select = document.getElementById('bookAuthor');
+            select.innerHTML = '<option value="">Select Author</option>' +
+                authors.map(author => 
+                    `<option value="${author.author_id}">${author.name}</option>`
+                ).join('');
+        } catch (error) {
+            console.error('Error loading authors:', error);
+        }
+    }
+    
+    function setupAddBookForm() {
+        const form = document.getElementById('addBookForm');
+        if (!form) return;
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const bookData = {
+                title: document.getElementById('bookTitle').value,
+                author_id: parseInt(document.getElementById('bookAuthor').value),
+                isbn: document.getElementById('bookISBN').value,
+                published_year: parseInt(document.getElementById('bookYear').value),
+                copies_available: parseInt(document.getElementById('bookCopies').value)
+            };
+            
+            try {
+                await apiRequest('/admin/books', {
+                    method: 'POST',
+                    body: JSON.stringify(bookData)
+                });
+                
+                showAlert('Book added successfully!', 'success');
+                form.reset();
+                await loadAdminBooks();
+                showTab('books');
+            } catch (error) {
+                console.error('Error adding book:', error);
+            }
+        });
+    }
+    
+    async function deleteBook(bookId) {
+        if (!confirm('Are you sure you want to delete this book?')) return;
+        
+        try {
+            await apiRequest(`/admin/books/${bookId}`, {
+                method: 'DELETE'
+            });
+            
+            showAlert('Book deleted successfully!', 'success');
+            await loadAdminBooks();
+        } catch (error) {
+            console.error('Error deleting book:', error);
+        }
+    }
+    
+    async function loadBorrowRecords() {
+        try {
+            const records = await apiRequest('/admin/borrow-records');
+            const recordsList = document.getElementById('recordsList');
+            
+            if (records.length === 0) {
+                recordsList.innerHTML = '<div class="loading">No borrow records found</div>';
+                return;
+            }
+            
+            recordsList.innerHTML = `
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Book</th>
+                                <th>Borrow Date</th>
+                                <th>Return Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${records.map(record => `
+                                <tr>
+                                    <td>${record.user_name}<br><small>${record.email}</small></td>
+                                    <td>${record.book_title}</td>
+                                    <td>${new Date(record.borrow_date).toLocaleDateString()}</td>
+                                    <td>${record.return_date ? new Date(record.return_date).toLocaleDateString() : 'Not returned'}</td>
+                                    <td>
+                                        <span class="book-status status-${record.return_date ? 'available' : 'unavailable'}">
+                                            ${record.return_date ? 'Returned' : 'Borrowed'}
+                                        </span>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        } catch (error) {
+            console.error('Error loading records:', error);
+        }
+    }
+    
+    // Initialize admin panel
+    document.addEventListener('DOMContentLoaded', async () => {
+        await initPage();
+        await loadAdminPanel();
+    });
+    </script>
+</body>
+</html>
