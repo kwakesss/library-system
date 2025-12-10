@@ -36,6 +36,12 @@ function updateNavigation() {
         if (adminLink) {
             adminLink.style.display = currentUser.role === 'admin' ? 'block' : 'none';
         }
+    } else {
+        if (loginBtn) loginBtn.style.display = 'block';
+        if (logoutBtn) logoutBtn.style.display = 'none';
+        if (userGreeting) {
+            userGreeting.style.display = 'none';
+        }
     }
 }
 
@@ -247,30 +253,25 @@ function debounce(func, wait) {
     };
 }
 
-// Event Listeners
 if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
         const email = document.getElementById('loginEmail').value;
         const password = document.getElementById('loginPassword').value;
-        
         try {
             const data = await apiRequest('/login', {
                 method: 'POST',
                 body: JSON.stringify({ email, password })
             });
-            
             localStorage.setItem('token', data.token);
             localStorage.setItem('user', JSON.stringify(data.user));
             currentUser = data.user;
-            
             showAlert('Login successful!', 'success');
             setTimeout(() => {
                 window.location.href = 'dashboard.html';
             }, 1000);
         } catch (error) {
-            console.error('Login error:', error);
+            showAlert('Account not found or invalid password. Please register.', 'error');
         }
     });
 }
@@ -278,26 +279,25 @@ if (loginForm) {
 if (registerForm) {
     registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
         const full_name = document.getElementById('registerName').value;
         const email = document.getElementById('registerEmail').value;
         const password = document.getElementById('registerPassword').value;
         const confirmPassword = document.getElementById('registerConfirmPassword').value;
-        
         if (password !== confirmPassword) {
             showAlert('Passwords do not match', 'error');
             return;
         }
-        
         try {
-            await apiRequest('/register', {
+            const data = await apiRequest('/register', {
                 method: 'POST',
                 body: JSON.stringify({ full_name, email, password })
             });
-            
-            showAlert('Registration successful! Please login.', 'success');
+            localStorage.setItem('token', '');
+            localStorage.setItem('user', JSON.stringify(data));
+            currentUser = data;
+            showAlert('Registration successful! Entering dashboard...', 'success');
             setTimeout(() => {
-                window.location.href = 'login.html';
+                window.location.href = 'dashboard.html';
             }, 1500);
         } catch (error) {
             console.error('Registration error:', error);
