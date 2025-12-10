@@ -8,14 +8,11 @@ const { pool, initializeDatabase } = require('./database');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Initialize database
 initializeDatabase();
 
-// JWT Authentication Middleware
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -29,14 +26,10 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// Routes
-
-// User Registration
 app.post('/api/register', async (req, res) => {
   try {
     const { full_name, email, password } = req.body;
     
-    // Check if user already exists
     const userExists = await pool.query(
       'SELECT * FROM users WHERE email = $1',
       [email]
@@ -46,10 +39,8 @@ app.post('/api/register', async (req, res) => {
       return res.status(400).json({ error: 'User already exists' });
     }
     
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
     
-    // Insert new user
     const result = await pool.query(
       'INSERT INTO users (full_name, email, password, role) VALUES ($1, $2, $3, $4) RETURNING user_id, full_name, email, role',
       [full_name, email, hashedPassword, 'student']
@@ -62,12 +53,10 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-// User Login
 app.post('/api/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     
-    // Find user
     const result = await pool.query(
       'SELECT * FROM users WHERE email = $1',
       [email]
@@ -79,13 +68,11 @@ app.post('/api/login', async (req, res) => {
     
     const user = result.rows[0];
     
-    // Check password
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
       return res.status(400).json({ error: 'Invalid credentials' });
     }
     
-    // Create JWT token
     const token = jwt.sign(
       { user_id: user.user_id, email: user.email, role: user.role },
       process.env.JWT_SECRET,
@@ -107,7 +94,6 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// Get all books
 app.get('/api/books', async (req, res) => {
   try {
     const { search, author } = req.query;
@@ -144,7 +130,6 @@ app.get('/api/books', async (req, res) => {
   }
 });
 
-// Get all authors
 app.get('/api/authors', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM authors ORDER BY name');
@@ -155,13 +140,11 @@ app.get('/api/authors', async (req, res) => {
   }
 });
 
-// Borrow a book
 app.post('/api/borrow', authenticateToken, async (req, res) => {
   try {
     const { book_id } = req.body;
     const user_id = req.user.user_id;
     
-    // Check if book is available
     const bookResult = await pool.query(
       'SELECT copies_available FROM books WHERE book_id = $1',
       [book_id]
@@ -175,7 +158,6 @@ app.post('/api/borrow', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'Book not available' });
     }
     
-    // Check if user already borrowed this book
     const existingBorrow = await pool.query(
       'SELECT * FROM borrow_records WHERE user_id = $1 AND book_id = $2 AND return_date IS NULL',
       [user_id, book_id]
@@ -185,13 +167,11 @@ app.post('/api/borrow', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: 'You already borrowed this book' });
     }
     
-    // Create borrow record
     const borrowResult = await pool.query(
       'INSERT INTO borrow_records (user_id, book_id, borrow_date) VALUES ($1, $2, CURRENT_DATE) RETURNING *',
       [user_id, book_id]
     );
     
-    // Update book availability
     await pool.query(
       'UPDATE books SET copies_available = copies_available - 1 WHERE book_id = $1',
       [book_id]
@@ -204,12 +184,10 @@ app.post('/api/borrow', authenticateToken, async (req, res) => {
   }
 });
 
-// Return a book
 app.post('/api/return/:record_id', authenticateToken, async (req, res) => {
   try {
     const { record_id } = req.params;
     
-    // Check if record exists and belongs to user
     const recordResult = await pool.query(
       'SELECT * FROM borrow_records WHERE record_id = $1 AND user_id = $2 AND return_date IS NULL',
       [record_id, req.user.user_id]
@@ -219,13 +197,11 @@ app.post('/api/return/:record_id', authenticateToken, async (req, res) => {
       return res.status(404).json({ error: 'Borrow record not found' });
     }
     
-    // Update return date
     await pool.query(
       'UPDATE borrow_records SET return_date = CURRENT_DATE WHERE record_id = $1',
       [record_id]
     );
     
-    // Update book availability
     await pool.query(
       'UPDATE books SET copies_available = copies_available + 1 WHERE book_id = $1',
       [recordResult.rows[0].book_id]
@@ -238,7 +214,6 @@ app.post('/api/return/:record_id', authenticateToken, async (req, res) => {
   }
 });
 
-// Get user's borrowed books
 app.get('/api/my-books', authenticateToken, async (req, res) => {
   try {
     const result = await pool.query(
@@ -258,7 +233,6 @@ app.get('/api/my-books', authenticateToken, async (req, res) => {
   }
 });
 
-// Admin: Add new book
 app.post('/api/admin/books', authenticateToken, async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
@@ -280,7 +254,6 @@ app.post('/api/admin/books', authenticateToken, async (req, res) => {
   }
 });
 
-// Admin: Update book
 app.put('/api/admin/books/:id', authenticateToken, async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
@@ -308,7 +281,6 @@ app.put('/api/admin/books/:id', authenticateToken, async (req, res) => {
   }
 });
 
-// Admin: Delete book
 app.delete('/api/admin/books/:id', authenticateToken, async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
@@ -317,7 +289,6 @@ app.delete('/api/admin/books/:id', authenticateToken, async (req, res) => {
     
     const { id } = req.params;
     
-    // Check if book is borrowed
     const borrowed = await pool.query(
       'SELECT * FROM borrow_records WHERE book_id = $1 AND return_date IS NULL',
       [id]
@@ -336,7 +307,6 @@ app.delete('/api/admin/books/:id', authenticateToken, async (req, res) => {
   }
 });
 
-// Admin: Get all borrow records
 app.get('/api/admin/borrow-records', authenticateToken, async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
@@ -358,7 +328,6 @@ app.get('/api/admin/borrow-records', authenticateToken, async (req, res) => {
   }
 });
 
-// Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

@@ -17,7 +17,6 @@ body {
     padding: 20px;
 }
 
-/* Header */
 .header {
     background: white;
     padding: 1rem 0;
@@ -102,8 +101,6 @@ body {
     opacity: 0.6;
     cursor: not-allowed;
 }
-
-/* Main Content */
 .main-content {
     background: white;
     border-radius: 10px;
@@ -122,8 +119,6 @@ body {
     margin-bottom: 20px;
     margin-top: 30px;
 }
-
-/* Authentication Forms */
 .auth-container {
     display: flex;
     justify-content: center;
@@ -178,8 +173,6 @@ body {
     border-color: #4299e1;
     box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
 }
-
-/* Books Grid */
 .books-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -245,8 +238,6 @@ body {
     background: #fed7d7;
     color: #742a2a;
 }
-
-/* Search Bar */
 .search-container {
     display: flex;
     gap: 10px;
@@ -268,8 +259,6 @@ body {
     background: white;
     font-size: 16px;
 }
-
-/* Dashboard */
 .dashboard-stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -295,8 +284,6 @@ body {
     font-size: 0.9rem;
     opacity: 0.9;
 }
-
-/* Tabs */
 .tabs {
     display: flex;
     gap: 10px;
@@ -342,7 +329,6 @@ tr:hover {
     background: #f7fafc;
 }
 
-/* Loading State */
 .loading {
     display: flex;
     justify-content: center;
@@ -352,7 +338,6 @@ tr:hover {
     color: #718096;
 }
 
-/* Alert Messages */
 .alert {
     padding: 15px;
     border-radius: 5px;
@@ -370,8 +355,6 @@ tr:hover {
     color: #742a2a;
     border: 1px solid #fc8181;
 }
-
-/* Responsive Design */
 @media (max-width: 768px) {
     .navbar {
         flex-direction: column;

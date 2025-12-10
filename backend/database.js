@@ -12,7 +12,6 @@ const pool = new Pool({
   }
 });
 
-// Test database connection
 pool.connect((err, client, release) => {
   if (err) {
     console.error('Error connecting to database:', err);
@@ -22,24 +21,18 @@ pool.connect((err, client, release) => {
   }
 });
 
-// Initialize database with sample admin user
 const initializeDatabase = async () => {
   try {
-    // Add role column to users table if it doesn't exist
     try {
       await pool.query(`ALTER TABLE users ADD COLUMN role VARCHAR(50) DEFAULT 'student'`);
     } catch (err) {
-      // Column might already exist, ignore error
     }
     
-    // Add password column to users table if it doesn't exist
     try {
       await pool.query(`ALTER TABLE users ADD COLUMN password VARCHAR(255)`);
     } catch (err) {
-      // Column might already exist, ignore error
     }
     
-    // Check if admin exists, if not create one
     const checkAdmin = await pool.query(
       "SELECT * FROM users WHERE email = 'admin@library.com'"
     );
@@ -48,7 +41,6 @@ const initializeDatabase = async () => {
       const bcrypt = require('bcryptjs');
       const hashedPassword = await bcrypt.hash('admin123', 10);
       
-      // Create admin user
       await pool.query(
         "INSERT INTO users (full_name, email, password, role) VALUES ($1, $2, $3, $4)",
         ['Library Admin', 'admin@library.com', hashedPassword, 'admin']

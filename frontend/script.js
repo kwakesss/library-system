@@ -1,12 +1,9 @@
-// API Base URL - Update with your Render URL
 const API_BASE_URL = 'https://library-system-3mfo.onrender.com/api';
 
-// Global state
 let currentUser = null;
 let books = [];
 let authors = [];
 
-// DOM Elements
 const loginForm = document.getElementById('loginForm');
 const registerForm = document.getElementById('registerForm');
 const searchInput = document.getElementById('searchInput');
@@ -16,11 +13,9 @@ const loginBtn = document.getElementById('loginBtn');
 const logoutBtn = document.getElementById('logoutBtn');
 const userGreeting = document.getElementById('userGreeting');
 
-// Check if user is logged in
 function checkAuth() {
     const token = localStorage.getItem('token');
     const userData = localStorage.getItem('user');
-    
     if (token && userData) {
         currentUser = JSON.parse(userData);
         updateNavigation();
@@ -29,7 +24,6 @@ function checkAuth() {
     return false;
 }
 
-// Update navigation based on auth state
 function updateNavigation() {
     if (currentUser) {
         if (loginBtn) loginBtn.style.display = 'none';
@@ -38,44 +32,30 @@ function updateNavigation() {
             userGreeting.textContent = `Welcome, ${currentUser.full_name}`;
             userGreeting.style.display = 'block';
         }
-        
-        // Show admin link if user is admin
         const adminLink = document.getElementById('adminLink');
         if (adminLink) {
             adminLink.style.display = currentUser.role === 'admin' ? 'block' : 'none';
         }
-    } else {
-        if (loginBtn) loginBtn.style.display = 'block';
-        if (logoutBtn) logoutBtn.style.display = 'none';
-        if (userGreeting) {
-            userGreeting.style.display = 'none';
-        }
     }
 }
 
-// API Request Helper
 async function apiRequest(endpoint, options = {}) {
     const token = localStorage.getItem('token');
-    
     const defaultHeaders = {
         'Content-Type': 'application/json',
     };
-    
     if (token) {
         defaultHeaders['Authorization'] = `Bearer ${token}`;
     }
-    
     try {
         const response = await fetch(`${API_BASE_URL}${endpoint}`, {
             headers: defaultHeaders,
             ...options
         });
-        
         if (!response.ok) {
             const error = await response.json();
             throw new Error(error.error || 'Request failed');
         }
-        
         return await response.json();
     } catch (error) {
         showAlert(error.message, 'error');
@@ -83,35 +63,27 @@ async function apiRequest(endpoint, options = {}) {
     }
 }
 
-// Show alert message
 function showAlert(message, type = 'success') {
     const mainContent = document.querySelector('.main-content');
     if (!mainContent) return;
-    
     const alertDiv = document.createElement('div');
     alertDiv.className = `alert alert-${type}`;
     alertDiv.textContent = message;
-    
     mainContent.prepend(alertDiv);
-    
     setTimeout(() => {
         alertDiv.remove();
     }, 5000);
 }
 
-// Load books
 async function loadBooks() {
     try {
         if (!booksContainer) return;
         booksContainer.innerHTML = '<div class="loading">Loading books...</div>';
-        
         const search = searchInput ? searchInput.value : '';
         const author = authorFilter ? authorFilter.value : '';
-        
         const queryParams = new URLSearchParams();
         if (search) queryParams.append('search', search);
         if (author) queryParams.append('author', author);
-        
         books = await apiRequest(`/books?${queryParams}`);
         displayBooks(books);
     } catch (error) {
@@ -119,7 +91,6 @@ async function loadBooks() {
     }
 }
 
-// Load authors for filter
 async function loadAuthors() {
     try {
         authors = await apiRequest('/authors');
@@ -134,15 +105,12 @@ async function loadAuthors() {
     }
 }
 
-// Display books in grid
 function displayBooks(books) {
     if (!booksContainer) return;
-    
     if (books.length === 0) {
         booksContainer.innerHTML = '<div class="loading">No books found</div>';
         return;
     }
-    
     booksContainer.innerHTML = books.map(book => `
         <div class="book-card">
             <div class="book-card-header">
@@ -173,25 +141,19 @@ function displayBooks(books) {
     `).join('');
 }
 
-// Borrow a book
 async function borrowBook(bookId) {
     if (!currentUser) {
         showAlert('Please login to borrow books', 'error');
         return;
     }
-    
     if (!confirm('Are you sure you want to borrow this book?')) return;
-    
     try {
         await apiRequest('/borrow', {
             method: 'POST',
             body: JSON.stringify({ book_id: bookId })
         });
-        
         showAlert('Book borrowed successfully!');
         loadBooks();
-        
-        // If on dashboard page, reload borrowed books
         if (window.location.pathname.includes('dashboard.html')) {
             loadMyBooks();
         }
@@ -200,15 +162,12 @@ async function borrowBook(bookId) {
     }
 }
 
-// Return a book
 async function returnBook(recordId) {
     if (!confirm('Are you sure you want to return this book?')) return;
-    
     try {
         await apiRequest(`/return/${recordId}`, {
             method: 'POST'
         });
-        
         showAlert('Book returned successfully!');
         loadMyBooks();
         loadBooks();
@@ -217,7 +176,6 @@ async function returnBook(recordId) {
     }
 }
 
-// Load user's borrowed books
 async function loadMyBooks() {
     try {
         const myBooks = await apiRequest('/my-books');
@@ -227,16 +185,13 @@ async function loadMyBooks() {
     }
 }
 
-// Display borrowed books
 function displayMyBooks(books) {
     const container = document.getElementById('borrowedBooksContainer');
     if (!container) return;
-    
     if (books.length === 0) {
         container.innerHTML = '<div class="loading">You have no borrowed books</div>';
         return;
     }
-    
     container.innerHTML = books.map(book => `
         <div class="book-card">
             <div class="book-card-header">
@@ -258,25 +213,19 @@ function displayMyBooks(books) {
     `).join('');
 }
 
-// Initialize page
 async function initPage() {
     checkAuth();
     updateNavigation();
-    
     if (document.getElementById('booksContainer')) {
         await loadAuthors();
         await loadBooks();
-        
-        // Add event listeners for search/filter
         if (searchInput) {
             searchInput.addEventListener('input', debounce(loadBooks, 300));
         }
-        
         if (authorFilter) {
             authorFilter.addEventListener('change', loadBooks);
         }
     }
-    
     if (document.getElementById('borrowedBooksContainer')) {
         if (currentUser) {
             await loadMyBooks();
@@ -286,7 +235,6 @@ async function initPage() {
     }
 }
 
-// Debounce helper for search
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -367,5 +315,4 @@ if (logoutBtn) {
     });
 }
 
-// Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', initPage);

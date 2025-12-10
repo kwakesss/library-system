@@ -49,14 +49,12 @@
             
             <h2>My Borrowed Books</h2>
             <div id="borrowedBooksContainer" class="books-grid">
-                <!-- Borrowed books will be loaded here -->
             </div>
         </div>
     </main>
 
     <script src="script.js"></script>
     <script>
-    // Dashboard specific functions
     async function loadDashboardStats() {
         try {
             const myBooks = await apiRequest('/my-books');
@@ -73,7 +71,6 @@
         }
     }
     
-    // Initialize dashboard
     document.addEventListener('DOMContentLoaded', async () => {
         await initPage();
         if (currentUser) {
