@@ -1,5 +1,5 @@
-// API Base URL - Update with your backend URL
-const API_BASE_URL = 'http://localhost:3000/api';
+// API Base URL - Update with your Render URL
+const API_BASE_URL = 'https://library-system-3mfo.onrender.com/api';
 
 // Global state
 let currentUser = null;
