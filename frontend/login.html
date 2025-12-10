@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Digital Library</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h2><i class="fas fa-book"></i> Digital Library</h2>
+            
+            <div id="loginSection">
+                <h3>Login to Your Account</h3>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email Address</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        Login
+                    </button>
+                </form>
+                <p style="text-align: center; margin-top: 20px;">
+                    Don't have an account? 
+                    <a href="#" onclick="showRegister()" style="color: #4299e1;">Register here</a>
+                </p>
+                <p style="text-align: center; margin-top: 10px;">
+                    <a href="index.html" style="color: #718096;">
+                        <i class="fas fa-arrow-left"></i> Back to Home
+                    </a>
+                </p>
+            </div>
+            
+            <div id="registerSection" style="display: none;">
+                <h3>Create New Account</h3>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="registerName">Full Name</label>
+                        <input type="text" id="registerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email Address</label>
+                        <input type="email" id="registerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Password</label>
+                        <input type="password" id="registerPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerConfirmPassword">Confirm Password</label>
+                        <input type="password" id="registerConfirmPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-secondary" style="width: 100%;">
+                        Register
+                    </button>
+                </form>
+                <p style="text-align: center; margin-top: 20px;">
+                    Already have an account? 
+                    <a href="#" onclick="showLogin()" style="color: #4299e1;">Login here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+    function showRegister() {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('registerSection').style.display = 'block';
+    }
+    
+    function showLogin() {
+        document.getElementById('registerSection').style.display = 'none';
+        document.getElementById('loginSection').style.display = 'block';
+    }
+    
+    // Check if user is already logged in
+    document.addEventListener('DOMContentLoaded', () => {
+        if (checkAuth()) {
+            window.location.href = 'dashboard.html';
+        }
+    });
+    </script>
+</body>
+</html>

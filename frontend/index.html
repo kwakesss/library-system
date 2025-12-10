@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Library Catalogue</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <i class="fas fa-book"></i> Digital Library
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="dashboard.html">My Books</a>
+                <a href="admin.html" id="adminLink" style="display: none;">Admin</a>
+                <span id="userGreeting" style="display: none;"></span>
+                <a href="login.html" id="loginBtn" class="btn btn-primary">Login</a>
+                <a href="#" id="logoutBtn" class="btn btn-danger" style="display: none;">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="main-content">
+            <h1>Welcome to Digital Library</h1>
+            <p class="subtitle">Browse our collection of books from Ghanaian and African authors</p>
+            
+            <div class="search-container">
+                <input type="text" 
+                       id="searchInput" 
+                       class="search-input" 
+                       placeholder="Search books by title or author...">
+                <select id="authorFilter" class="filter-select">
+                    <option value="">All Authors</option>
+                </select>
+                <button onclick="loadBooks()" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </div>
+            
+            <div id="booksContainer" class="books-grid">
+                <!-- Books will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
