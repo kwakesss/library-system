@@ -1,76 +1,87 @@
-# Digital Library Catalogue System - Frontend
+Here’s a more natural, first-person version that sounds human and project-ready:
 
-## Overview
-HTML/CSS/JavaScript frontend for the Digital Library Catalogue System.
+⸻
 
-## Features Implemented
-✅ User Registration & Authentication  
-✅ Book Catalogue Display  
-✅ Search and Filter Functionality  
-✅ Borrow & Return Management  
-✅ Admin Panel (Add/Delete Books)  
-✅ Responsive Design  
-✅ Real-time Updates  
+Digital Library Catalogue System – Frontend
 
-## Pages
-1. **index.html** - Browse all books with search/filter
-2. **login.html** - User authentication (Login/Register)
-3. **dashboard.html** - View borrowed books and return them
-4. **admin.html** - Manage books and view all borrow records
+Overview
 
-## How to Run
+I built the frontend of the Digital Library Catalogue System using HTML, CSS, and JavaScript. It provides a clean, responsive interface that allows users to browse books, manage borrowing, and handle authentication while communicating seamlessly with the backend API.
 
-### Local Development
-1. Update `API_BASE_URL` in `script.js` to match your backend URL
-2. Open `index.html` in your web browser
+Features Implemented
+	•	User registration and login
+	•	Book catalogue display
+	•	Search and filter functionality
+	•	Borrow and return book management
+	•	Admin panel for adding and deleting books
+	•	Responsive design for different screen sizes
+	•	Real-time updates from the backend
 
-### Default Test Accounts
-**Admin Account:**
-- Email: admin@library.com
-- Password: admin123
+Pages
+	1.	index.html – Displays all available books with search and filter options
+	2.	login.html – Handles user login and registration
+	3.	dashboard.html – Allows users to view and return borrowed books
+	4.	admin.html – Used by admins to manage books and view borrowing records
 
-**Student Accounts:**
-- Email: kwame.mensah@example.com
-- Email: abena.serwaa@example.com
-- Email: yaw.boakye@example.com
-- Email: esi.adomako@example.com
+How to Run
 
-## API Integration
-All API calls use JavaScript Fetch API with proper error handling and JWT authentication.
+Local Development
+	1.	I update the API_BASE_URL in script.js to match the backend URL.
+	2.	I then open index.html in a web browser to start using the application.
 
-## Technologies Used
-- HTML5
-- CSS3 (Flexbox/Grid)
-- Vanilla JavaScript (ES6+)
-- Font Awesome Icons (6.4.0)
+Default Test Accounts
 
-## Browser Compatibility
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
+Admin Account
+	•	Email: admin@library.com
+	•	Password: admin123
 
-## Configuration
-Update the API base URL in `script.js`:
-```javascript
+Student Accounts
+	•	kwame.mensah@example.com
+	•	abena.serwaa@example.com
+	•	yaw.boakye@example.com
+	•	esi.adomako@example.com
+
+API Integration
+
+All communication with the backend is handled using the JavaScript Fetch API. I implemented proper error handling and secured all protected routes using JWT authentication.
+
+Technologies Used
+	•	HTML5
+	•	CSS3 (Flexbox and Grid)
+	•	Vanilla JavaScript (ES6+)
+	•	Font Awesome Icons (v6.4.0)
+
+Browser Compatibility
+
+The application works well on the latest versions of:
+	•	Google Chrome
+	•	Mozilla Firefox
+	•	Safari
+	•	Microsoft Edge
+
+Configuration
+
+To connect the frontend to the backend, I update the API base URL in script.js:
+
 const API_BASE_URL = 'http://localhost:3000/api';
-```
 
-Or for production:
-```javascript
+For production deployment:
+
 const API_BASE_URL = 'https://your-render-backend-url.onrender.com/api';
-```
 
-## Features
-- **Browse Books**: View all books with detailed information
-- **Search**: Filter books by title or author
-- **Borrow**: Borrow books (requires login)
-- **Return**: Return borrowed books
-- **Admin Dashboard**: Add/delete books and manage all borrow records
-- **Statistics**: View borrowing statistics on user dashboard
+Key Features
+	•	Browsing books with full details
+	•	Searching by title or author
+	•	Borrowing books (login required)
+	•	Returning borrowed books
+	•	Admin dashboard for book and borrow management
+	•	Viewing borrowing statistics on the user dashboard
 
-## Notes
-- All passwords are hashed and stored securely
-- JWT tokens expire after 24 hours
-- Books have a 14-day borrowing period
-- Only admins can manage books
+Notes
+	•	All user passwords are securely hashed
+	•	JWT tokens expire after 24 hours
+	•	Books can be borrowed for a maximum of 14 days
+	•	Only admin users are allowed to manage books
+
+⸻
+
