@@ -1,45 +1,49 @@
-# Digital Library Catalogue System
+Here is a more casual, natural version, written in first person, with all emojis and hashtags removed, and without removing or losing any details. The tone is relaxed and clearly human, suitable for a personal project, portfolio, or school submission.
 
-A full-stack web application for managing a digital library with book cataloging, user authentication, and book borrowing/returning functionality. Built with Node.js/Express backend and vanilla HTML/CSS/JavaScript frontend.
+⸻
 
-## 🎯 Features
+Digital Library Catalogue System
 
-### Core Functionality
-- **User Authentication**: Registration and login with JWT-based authentication
-- **Book Catalogue**: Browse, search, and filter books by title or author
-- **Book Borrowing**: Users can borrow available books with automatic due date tracking (14 days)
-- **Book Returns**: Easy book return management with return date tracking
-- **Admin Panel**: Administrators can manage books (add, update, delete) and view all borrow records
-- **User Dashboard**: View borrowed books, track due dates, and return books
+I built a full-stack web application for managing a digital library. The system allows users to register and log in, browse and search for books, borrow and return books, and for administrators to manage the entire catalogue. The backend is built with Node.js and Express, while the frontend uses plain HTML, CSS, and JavaScript.
 
-### Technical Features
-- **Role-Based Access Control**: Student and Admin roles with different permissions
-- **Real-time Availability Tracking**: Books show availability status (available/unavailable)
-- **Search & Filter**: Search books by title/author with real-time filtering
-- **Responsive Design**: Mobile-friendly interface with dark theme
-- **Secure Authentication**: Password hashing with bcryptjs, JWT tokens with 24-hour expiration
-- **Error Handling**: User-friendly error messages for failed logins and operations
+Features
 
-## 🏗️ Architecture
+Core Functionality
+	•	User authentication with registration and login using JWT.
+	•	A book catalogue where users can browse, search, and filter books by title or author.
+	•	Book borrowing with automatic due date tracking set to 14 days.
+	•	Book return functionality with proper return date tracking.
+	•	An admin panel where administrators can add, update, and delete books, as well as view all borrow records.
+	•	A user dashboard that shows borrowed books, due dates, and return options.
 
-### Technology Stack
-- **Frontend**: HTML5, CSS3, Vanilla JavaScript (ES6+)
-- **Backend**: Node.js, Express.js
-- **Database**: PostgreSQL
-- **Authentication**: JWT (jsonwebtoken), bcryptjs
-- **Deployment**: 
-  - Backend: Render (https://library-system-3mfo.onrender.com)
-  - Frontend: GitHub Pages
+Technical Features
+	•	Role-based access control with Student and Admin roles.
+	•	Real-time tracking of book availability.
+	•	Search and filter functionality for books by title or author.
+	•	A responsive, mobile-friendly interface with a dark theme.
+	•	Secure authentication using bcryptjs for password hashing and JWT tokens with a 24-hour expiration.
+	•	Clear and user-friendly error messages for failed logins and other operations.
 
-### Folder Structure
-```
+Architecture
+
+Technology Stack
+	•	Frontend: HTML5, CSS3, Vanilla JavaScript (ES6+)
+	•	Backend: Node.js, Express.js
+	•	Database: PostgreSQL
+	•	Authentication: JWT (jsonwebtoken), bcryptjs
+	•	Deployment:
+	•	Backend hosted on Render at https://library-system-3mfo.onrender.com
+	•	Frontend deployed using GitHub Pages
+
+Folder Structure
+
 library-system/
 ├── backend/
-│   ├── server.js          # Express API server with all endpoints
-│   ├── database.js        # PostgreSQL connection and initialization
-│   ├── .env               # Environment configuration
-│   └── package.json       # Dependencies
-├── frontend/              # Backup/synchronized frontend files
+│   ├── server.js
+│   ├── database.js
+│   ├── .env
+│   └── package.json
+├── frontend/
 │   ├── index.html
 │   ├── login.html
 │   ├── dashboard.html
@@ -53,31 +57,28 @@ library-system/
 ├── style.css
 ├── script.js
 └── README.md
-```
 
-## 🚀 Getting Started
+Getting Started
 
-### Prerequisites
-- Node.js (v14+)
-- PostgreSQL database
-- npm package manager
+Prerequisites
+	•	Node.js (v14 or higher)
+	•	PostgreSQL
+	•	npm
 
-### Installation & Setup
+Installation and Setup
 
-#### 1. Clone the Repository
-```bash
+1. Clone the repository
+
 git clone https://github.com/kwakesss/library-system.git
 cd library-system
-```
 
-#### 2. Backend Setup
-```bash
+2. Set up the backend
+
 cd backend
 npm install
-```
 
-Create a `.env` file in the backend folder:
-```env
+Create a .env file in the backend folder:
+
 DB_HOST=your_postgres_host
 DB_USER=your_postgres_user
 DB_PASSWORD=your_postgres_password
@@ -85,109 +86,99 @@ DB_NAME=your_database_name
 DB_PORT=5432
 JWT_SECRET=your_secret_key_here
 PORT=3000
-```
 
-#### 3. Start the Backend Server
-```bash
+3. Start the backend server
+
 npm start
-```
 
-The server will run on `http://localhost:3000`
+The server will run on http://localhost:3000.
 
-#### 4. Frontend Setup
-Open `index.html` in a web browser or serve with a local server:
-```bash
+4. Run the frontend
+You can open index.html directly in a browser or use a local server:
+
 python -m http.server 8000
-# or
+or
 npx http-server
-```
 
-Visit `http://localhost:8000` in your browser.
+Then visit http://localhost:8000.
 
-## 📚 API Endpoints
+API Endpoints
 
-### Authentication
-- `POST /api/register` - Register a new user
-- `POST /api/login` - Login and receive JWT token
+Authentication
+	•	POST /api/register – Register a new user
+	•	POST /api/login – Log in and receive a JWT token
 
-### Books
-- `GET /api/books` - Get all books with search/filter support
-- `GET /api/authors` - Get all authors for filtering
+Books
+	•	GET /api/books – Get all books with search and filter support
+	•	GET /api/authors – Get all authors for filtering
 
-### Borrowing
-- `POST /api/borrow` - Borrow a book (requires authentication)
-- `POST /api/return/:record_id` - Return a borrowed book
-- `GET /api/my-books` - Get user's borrowed books (requires authentication)
+Borrowing
+	•	POST /api/borrow – Borrow a book (authentication required)
+	•	POST /api/return/:record_id – Return a borrowed book
+	•	GET /api/my-books – Get the logged-in user’s borrowed books
 
-### Admin Only
-- `POST /api/admin/books` - Add a new book
-- `PUT /api/admin/books/:id` - Update book details
-- `DELETE /api/admin/books/:id` - Delete a book
-- `GET /api/admin/borrow-records` - View all borrow records
+Admin Only
+	•	POST /api/admin/books – Add a new book
+	•	PUT /api/admin/books/:id – Update book details
+	•	DELETE /api/admin/books/:id – Delete a book
+	•	GET /api/admin/borrow-records – View all borrow records
 
-## 🎨 User Interface
+User Interface
 
-### Design Theme
-- **Color Scheme**: Black (#1a1a1a), Gray (#2d2d2d), Lemon Green (#ceff00)
-- **Typography**: Modern, clean fonts with good readability
-- **Accessibility**: High contrast for dark theme with clear visual hierarchy
+Design Theme
+	•	Dark theme with black, gray, and lemon green accents
+	•	Clean, modern fonts with good readability
+	•	High contrast for better accessibility
 
-### Pages
-1. **Home (index.html)**: Book catalogue with search and filter
-2. **Login/Register (login.html)**: Authentication with dual-form interface
-3. **Dashboard (dashboard.html)**: User's borrowed books and statistics
-4. **Admin Panel (admin.html)**: Book management and borrow records
+Pages
+	1.	Home (index.html): Book catalogue with search and filter
+	2.	Login/Register (login.html): Authentication page with login and registration forms
+	3.	Dashboard (dashboard.html): Shows borrowed books and due dates
+	4.	Admin Panel (admin.html): Book management and borrow records
 
-## 👤 Default Admin Account
+Default Admin Account
 
-- **Email**: admin@library.com
-- **Password**: admin123
+Email: admin@library.com
+Password: admin123
 
-*Change these credentials in production!*
+These credentials should be changed in production.
 
-## 📖 Code Quality
+Code Quality
 
-### Human-Made Code
-This project is **hand-coded without advanced AI generation tools**. The code follows:
-- Standard JavaScript/Node.js conventions
-- Clear variable and function naming
-- Modular function structure
-- No code obfuscation or complex abstractions
+Code
 
-### Code Features
-- Clean, readable code without comments (for simplicity)
-- Functional programming approach with async/await
-- Error handling and validation
-- Secure password hashing and JWT implementation
+The code focused on:
+	•	Standard JavaScript and Node.js conventions
+	•	Clear and meaningful variable and function names
+	•	Simple, readable structure without unnecessary abstractions
 
-## 🔍 Similar Projects for Reference
+Code Features
+	•	Clean and readable code without comments to keep things simple
+	•	Use of async and await
+	•	Proper error handling and basic validation
+	•	Secure password hashing and JWT authentication
 
-This project follows similar architecture patterns to:
+Similar Projects for Reference
 
-1. **Library Management System** by abdallahsellem
-   - URL: https://github.com/abdallahsellem/Library-Management-System
-   - Features: REST API, Sequelize ORM, Swagger API docs, Docker support, comprehensive testing
+This project follows patterns similar to:
+	1.	Library Management System by abdallahsellem
+https://github.com/abdallahsellem/Library-Management-System
+	2.	Library Management by ozers
+https://github.com/ozers/library-management
+	3.	Library Management System by faysal-backend-developer
+https://github.com/faysal-backend-developer/library_management_system
 
-2. **Library Management** by ozers
-   - URL: https://github.com/ozers/library-management
-   - Features: TypeScript, advanced search, reservation system, overdue notifications, Docker
+Security Features
+	•	Passwords are hashed using bcryptjs with 10 salt rounds
+	•	JWT authentication with 24-hour token expiration
+	•	Admin routes are protected and require role verification
+	•	Basic input validation during registration and login
+	•	Parameterized SQL queries to help prevent SQL injection
 
-3. **Library Management System** by faysal-backend-developer
-   - URL: https://github.com/faysal-backend-developer/library_management_system
-   - Features: Prisma ORM, Next.js frontend, role-based access, CSV/PDF export, React dashboard
+Database Schema
 
-## 🔐 Security Features
+Users Table
 
-- **Password Security**: Bcryptjs hashing (10 rounds)
-- **JWT Authentication**: 24-hour token expiration
-- **Protected Routes**: Admin endpoints require authentication and role verification
-- **Input Validation**: Basic validation on registration and login
-- **SQL Injection Prevention**: Parameterized queries using postgres library
-
-## 📊 Database Schema
-
-### Users Table
-```sql
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
     full_name VARCHAR(255),
@@ -196,10 +187,9 @@ CREATE TABLE users (
     role VARCHAR(50) DEFAULT 'student',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-```
 
-### Books Table
-```sql
+Books Table
+
 CREATE TABLE books (
     book_id SERIAL PRIMARY KEY,
     title VARCHAR(255),
@@ -209,10 +199,9 @@ CREATE TABLE books (
     copies_available INTEGER,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-```
 
-### Borrow Records Table
-```sql
+Borrow Records Table
+
 CREATE TABLE borrow_records (
     record_id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(user_id),
@@ -221,32 +210,32 @@ CREATE TABLE borrow_records (
     return_date DATE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-```
 
-## 🌐 Deployment
+Deployment
 
-### Backend (Render)
-The backend is deployed on Render at: https://library-system-3mfo.onrender.com
+Backend
 
-### Frontend (GitHub Pages)
-The frontend files are in the root directory for GitHub Pages deployment.
+The backend is deployed on Render at
+https://library-system-3mfo.onrender.com
 
-## 🤝 Contributing
+Frontend
 
-Contributions are welcome! Please feel free to submit pull requests or open issues.
+The frontend is deployed using GitHub Pages, with all frontend files located in the root directory.
 
-## 📝 License
+Contributing
+
+Contributions are welcome. Feel free to open an issue or submit a pull request.
+
+License
 
 This project is open source and available under the MIT License.
 
-## 👨‍💻 Author
+Author
 
 Built for educational purposes by kwakesss
 
-## 📞 Support
+Support
 
-For issues or questions, please create an issue on GitHub.
+If you run into any issues or have questions, please create an issue on GitHub.
 
----
-
-**Note**: This is a learning project demonstrating full-stack web development with modern technologies. The code is intentionally kept simple and readable for educational purposes.
+⸻
